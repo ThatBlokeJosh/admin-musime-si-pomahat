@@ -1,0 +1,103 @@
+{
+  "page_title": "Musíme si pomáhat",
+  "donate_title": "Přispějte",
+  "donate_text": "Přispět",
+  "banner": {
+    "title": "Čas pro zdraví - Musíme si pomáhat",
+    "paragraph": "Aby aplikace zůstala pro uživatele zdarma, je nutné najít financování. Lze to řešit reklamou či placenou verzí, přesto zkusíme, zda její provoz a vývoj podpoří ti, kterým pomáhá nebo ti, co rádi pomáhají!",
+    "quote": "“Solidarita mezi mými pacienty je veliká, tak věřím, že se to povede.”",
+    "quote_by": "prof. MUDr. Martin Matoulek, Ph.D."
+  },
+  "carousel": {
+    "title": "Informace o projektu",
+    "paragraph": "Prostředky získané v rámci projektu budou sloužit nejen k provozu, ale především k vývoji chytré aplikace, která bude umožňovat předvídat, kam se vaše váha bude ubírat. Ukazuje se, že všichni, kdo aplikaci používají, jsou úspěšnější, proto ji chceme udržet bezplatnou!",
+    "under_text": "Příběh jednoho z našich pacientů"
+  },
+  "stories": {
+    "title": "Naše příběhy"
+  },
+  "partners": {
+    "title": "Hlavní partneři",
+    "images": [
+      "/partners/medispo.png",
+      "/partners/magicware.png"
+    ]
+  },
+  "footer": {
+    "contacts": "Kontakty",
+    "email": "casprozdravi@medispo.net",
+    "tel": "+420 777 567 237",
+    "download": "Stáhněte si aplikaci Čas pro zdraví",
+    "google_play": "https://play.google.com/store/apps/details?id=com.dvomar.cpz",
+    "apple_store": "https://apps.apple.com/cz/app/%C4%8Das-pro-zdrav%C3%AD/id1542097791",
+    "copy": "2026 © All rights reserved"
+  },
+  "individual_colaboration": "Indivudální spolupráce.",
+  "colab_text": "Máte zájem o větší podporu - spolupráci. Kontaktujte nás přímo zde:",
+  "colab_email": "martin.matoulek@medispo.net",
+  "donate": {
+    "info": "Informace o Vás",
+    "email_text": "Potvrzení o daru Vám přijde na zadaný email. To neplatí u anonymních darů.",
+    "thank_you_paragraph": "Děkujeme! Vaše podpora aplikace Čas pro zdraví  je pro nás nesmírně důležitá. Jak říká prof. MUDr. Martin Matoulek, Ph.D.: „Solidarita mezi mými pacienty je veliká,“  a vy jste to právě potvrdili. Díky vám může aplikace zůstat pro všechny uživatele i nadále zdarma.",
+    "thank_you": "Děkujeme!",
+    "back_to_homepage": "Zpět na domovskou stránku",
+    "scan_qr_code": "Naskenujte QR kód",
+    "back_to_form": "Upravit informace",
+    "sent_money": "Peníze jsem odeslal",
+    "generate_qr_code": "Vygenerovat QR kód",
+    "anon_gift": "Anonymní dar",
+    "not_public": "Nechci být veřejně uveden jako dárce",
+    "company_gift": "Posílám za firmu",
+    "name_input": {
+      "label": "Jméno příjmení",
+      "placeholder": "Jan Novák"
+    },
+    "company_name_input": {
+      "label": "Název společnosti",
+      "placeholder": "Novák s.r.o."
+    },
+    "company_email_input": {
+      "label": "Kontaktní email",
+      "placeholder": "jan.novak@email.cz"
+    },
+    "email_input": {
+      "label": "Email",
+      "placeholder": "jan.novak@email.cz"
+    },
+    "amount_input": {
+      "label": "Vlastní částka",
+      "placeholder": "10 000"
+    },
+    "adress_input": {
+      "label": "Bydliště",
+      "placeholder": "Horní dolní"
+    },
+    "company_adress_input": {
+      "label": "Sídlo",
+      "placeholder": "Praha"
+    },
+    "birthdate_input": {
+      "label": "Datum narození",
+      "placeholder": "1. 1. 1971"
+    },
+    "ico_input": {
+      "label": "IČO",
+      "placeholder": "01234567"
+    },
+    "note_input": {
+      "label": "Vzkaz",
+      "placeholder": "Děkuji, že jste mi pomohli zhubnout!"
+    },
+    "default_type": 0,
+    "types": [
+      { 
+        "name": "Bronzový člen (50Kč měsíčně)",
+        "value": 50
+      },
+      { 
+        "name": "Zlatý člen (200Kč měsíčně)",
+        "value": 200
+      }
+    ]
+  }
+}

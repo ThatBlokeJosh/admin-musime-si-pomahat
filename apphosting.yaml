@@ -1,0 +1,25 @@
+# Settings for Backend (on Cloud Run).
+# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+runConfig:
+  minInstances: 0
+  # maxInstances: 100
+  # concurrency: 80
+  # cpu: 1
+  # memoryMiB: 512
+
+# Environment variables and secrets.
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyB8aRJVBBG5J_KpJNNCbyy5HwVmz-0uSfU
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: musime-si-pomahat-1.firebaseapp.com
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: musime-si-pomahat-1
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: musime-si-pomahat-1.firebasestorage.app
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "680258676187"
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:680258676187:web:9987fa92b08d4ea49bb3fe"
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: G-7MC52Q07T7

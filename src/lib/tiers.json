@@ -1,0 +1,48 @@
+[
+  {
+    "id": "bronze",
+    "selector": "Bronzová podpora (50Kč měsíčně)",
+    "title": "Bronzová podpora",
+    "titleColor": "#CD7F32",
+    "description": "50 Kč za měsíc, znamená 600 Kč/rok. Je to jedna zmrzlina, 1 pivo, 2 dc. vína/za měsíc. Přesto to může pomoci ostatním. Ročním příspěvkem se můžete stát. Jako poděkování získáte pravidelné elektronické vydání Obesity NEWS.",
+    "priceLabel": "50 Kč/měsíc",
+    "value": 50
+  },
+  {
+    "id": "silver",
+    "selector": "Stříbrná podpora (100Kč měsíčně)",
+    "title": "Stříbrná podpora",
+    "titleColor": "#868F96",
+    "description": "100 Kč za měsíc, znamená 1200 Kč/rok. To je již významná pomoc. Jako poděkování vám pak můžeme poskytnout E-knihu Manuál úspěšného hubnutí. Pokud budete chtít získat potvrzení o daru, vyplňte ve formuláři. Získáte elektronicky jako poděkování poslední číslo novin Obesity NEWS.",
+    "priceLabel": "100 Kč/měsíc",
+    "isPopular": true,
+    "value": 100
+  },
+  {
+    "id": "gold",
+    "selector": "Zlatá podpora (200Kč měsíčně)",
+    "title": "Zlatá podpora",
+    "titleColor": "#D4AF37",
+    "description": "200 Kč za měsíc, znamená 2400 Kč/rok, Jako poděkování si vám dovolíme nabídnout elektronicky časopis Obesity NEWS, E knihu Manuál úspěšného hubnutí. Pokud bude te chtí o portvzení daru, vyplňte ve formuláři. Jako poděkování získáte pravidelné elektronické vydání Obesity NEWS.",
+    "priceLabel": "200 Kč/měsíc",
+    "value": 200
+  },
+  {
+    "id": "platinum",
+    "selector": "Platinová podpora (5000Kč jednorázově)",
+    "title": "Platinový partner",
+    "titleColor": "#5072A7",
+    "description": "Totu částkou významně podpoříte provoz aplikace. Pokud buďte chtít zsíakt potvrzení o daru, vyplnte ve formuláři příslušnou část. Jako poděkování získáte pravidelné elektronické vydání Obesity NEWS.",
+    "priceLabel": "5000 Kč - jednorázový dar",
+    "value": 5000
+  },
+  {
+    "id": "custom",
+    "selector": "Vlastní tempo (vlastní částka)",
+    "title": "Vlastní tempo",
+    "titleColor": "#2E7D32",
+    "description": "Nenašli jste tu správnou částku? Zadejte si vlastní! Vaše podpora je pro nás klíčová bez ohledu na výši daru. Jako poděkování získáte pravidelné elektronické vydání Obesity NEWS.",
+    "priceLabel": "Vlastní částka",
+    "value": 0
+  }
+]
