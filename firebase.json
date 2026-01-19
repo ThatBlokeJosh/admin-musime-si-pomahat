@@ -1,19 +1,13 @@
 {
-  "firestore": {
-    "database": "(default)",
-    "location": "europe-west1",
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
-  "hosting": {
-    "source": ".",
+  "apphosting": {
+    "backendId": "admin",
+    "rootDir": "/",
     "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "europe-west1"
-    }
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "functions"
+    ]
   }
 }
