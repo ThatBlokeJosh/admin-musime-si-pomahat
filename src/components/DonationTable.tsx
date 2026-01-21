@@ -104,6 +104,10 @@ export default function DonationsList() {
     }
   };
 
+  function ExportButton(to_export: Donation[]) {
+    return <GovButton onClick={() => { exportDonationsToExcel(to_export) }} type='outlined' color='primary'><GovIcon name='export'></GovIcon>Exportovat</GovButton>
+  }
+
 
   // 3. Define Column Visuals (The critical part for matching the image)
   const columns: Column<Donation>[] = [
@@ -246,14 +250,13 @@ export default function DonationsList() {
         data={pending}
         columns={columns}
         isLoading={loading}
+        header={ExportButton(pending)}
         totalCount={pending.length}
       />
       <Table<Donation>
         title={"Přehled darů"}
         description="Základní datová tabulka s možností akce s daným řádkem"
-        header={
-          <GovButton onClick={() => { exportDonationsToExcel(paid) }} type='outlined' color='primary'><GovIcon name='export'></GovIcon>Exportovat</GovButton>
-        }
+        header={ExportButton(paid)}
         data={paid}
         columns={columns}
         isLoading={loading}
@@ -265,6 +268,7 @@ export default function DonationsList() {
         data={cancelled}
         columns={columns}
         isLoading={loading}
+        header={ExportButton(cancelled)}
         totalCount={cancelled.length}
       />
     </div>
