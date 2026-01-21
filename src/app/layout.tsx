@@ -8,6 +8,7 @@ import "./gov/components.css";
 import "./gov/templates/styles.css";
 import "./gov/templates/tokens.css";
 import Header from "@/components/Header";
+import { AuthContextProvider } from "@/context/AuthContext";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -29,10 +30,12 @@ export default function RootLayout({
   return (
     <html lang="cs" data-theme="light">
       <body
-        className={`${roboto.className} antialiased relative flex flex-col justify-between items-center min-h-screen w-screen overflow-x-hidden`}
+        className={`${roboto.className} antialiased relative flex flex-col`}
       >
-        <Header></Header>
-        {children}
+        <AuthContextProvider>
+          <Header></Header>
+          {children}
+        </AuthContextProvider>
       </body>
     </html>
   );

@@ -1,6 +1,11 @@
+import DonationsList from "@/components/DonationTable";
+import NotificationList from "@/components/NotificationTable";
+
 export default function Home() {
   return (
-    <main className="max-w-[100vw] md:max-w-[1440px] flex flex-col items-center justify-center pt-[0px] md:pt-[120px] md:px-[72px] pb-[120px]" style={{ "gap": 120 }}>
+    <main className="w-[100vw] grid gap-8 py-8 px-16 items-center">
+      <DonationsList></DonationsList>
+      <NotificationList></NotificationList>
     </main>
   );
 }

@@ -1,5 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { Analytics, getAnalytics, setAnalyticsCollectionEnabled } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,13 +13,7 @@ const firebaseConfig = {
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-
-let analytics: Analytics | null = null;
-
-if (typeof window !== "undefined") {
-  analytics = getAnalytics(app);
-  console.log(analytics)
-}
-
-export { analytics, setAnalyticsCollectionEnabled };
+export { db, auth };
