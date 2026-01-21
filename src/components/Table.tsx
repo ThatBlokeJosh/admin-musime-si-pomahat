@@ -18,6 +18,7 @@ interface TableProps<T> {
   isLoading?: boolean;
   totalCount?: number;
   footer?: React.ReactNode; // <--- Added optional footer prop
+  header?: React.ReactNode; // <--- Added optional footer prop
 }
 
 // Use a generic type <T> so this table can display any kind of data
@@ -28,10 +29,11 @@ export function Table<T extends { id: string }>({
   columns,
   isLoading,
   totalCount,
-  footer // <--- Destructure footer
+  footer, // <--- Destructure footer
+  header,
 }: TableProps<T>) {
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-hidden flex flex-col">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto flex flex-col">
       {/* --- Header Section --- */}
       <div className="px-4 py-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50/80 gap-4">
         <div>
@@ -40,8 +42,9 @@ export function Table<T extends { id: string }>({
             <p className="text-sm mt-1 leading-relaxed">{description}</p>
           )}
         </div>
-        <div className="text-sm text-gray-500 font-medium">
-          {totalCount ?? data.length} záznamů
+        <div className="flex gap-6 justify-center items-center text-sm text-gray-500 font-medium">
+          <span className='my-auto'>{totalCount ?? data.length} záznamů</span>
+          {header}
         </div>
       </div>
 
@@ -66,13 +69,13 @@ export function Table<T extends { id: string }>({
           <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
             {isLoading ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-16 text-center text-gray-400 italic">
+                <td colSpan={columns.length} className="px-6 py-5 text-center text-gray-400 italic">
                   Načítám data...
                 </td>
               </tr>
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-16 text-center text-gray-400 italic">
+                <td colSpan={columns.length} className="px-6 py-5 text-center text-gray-400 italic">
                   Žádná data k zobrazení.
                 </td>
               </tr>

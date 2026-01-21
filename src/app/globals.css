@@ -5,3 +5,7 @@ html {
   overscroll-behavior: none;
 }
 
+body {
+  overflow-x: hidden;
+}
+

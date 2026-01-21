@@ -5,8 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, orderBy, limit, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Ensure this path is correct
 import { Table, Column } from './Table';
-import { GovButton, GovIcon } from '@gov-design-system-ce/react';
+import { GovButton, GovFormCheckbox, GovIcon } from '@gov-design-system-ce/react';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { exportDonationsToExcel } from '@/lib/xlsx';
 
 // 1. Define Data Structure based on Firestore Schema
 interface Donation {
@@ -19,9 +20,11 @@ interface Donation {
   status: string;
   is_anonymous: boolean;
   for_company: boolean;
+  other_details: string,
+  not_public: boolean,
   // Allow price to be optional in case old data doesn't have it
   price?: {
-    id?: string;
+    id: string;
     priceLabel: string;
     titleColor?: string; // e.g., "#D4AF37"
   };
@@ -34,6 +37,7 @@ export default function DonationsList() {
 
   const paid = data.filter(d => d.status === "paid");
   const pending = data.filter(d => d.status === "pending");
+  const cancelled = data.filter(d => d.status === "cancelled");
 
   // 2. Fetch Data from Firestore
   useEffect(() => {
@@ -52,7 +56,8 @@ export default function DonationsList() {
             // Ensure status has a fallback
             status: d.status || 'pending',
             // Ensure price object exists for rendering safety
-            price: d.price || { priceLabel: `${d.amount} Kč` }
+            price: d.price || { priceLabel: `${d.amount} Kč` },
+            other_details: `${d.adress}${d.birthdate ? ", " + d.birthdate : ''}${d.ico ? ", " + d.ico : ''}`
           } as Donation;
         });
         setData(mappedData);
@@ -160,22 +165,31 @@ export default function DonationsList() {
     {
       header: "Status",
       cell: (row) => {
-        // 1. Map database status to UI Label
+        const paidStyle = "bg-green-100 text-green-800";
+        const pendingStyle = "bg-gray-200";
+        const cancelledStyle = "bg-red-100 text-red-800"
+
         let label = row.status;
-        if (row.status === 'pending') label = 'nepotvrzeno';
-        if (row.status === 'paid' || row.status === 'potvrzeno') label = 'potvrzeno';
+        let style = pendingStyle;
+        if (row.status === 'pending') {
+          label = 'nepotvrzeno';
+          style = pendingStyle;
+        } else if (row.status === 'paid') {
+          label = 'potvrzeno'
+          style = paidStyle;
+        } else if (row.status === 'cancelled') {
+          label = 'odmítnuto'
+          style = cancelledStyle;
+        };
 
         // 2. Define Styles based on the screenshot
         // Paid = Green background/text
-        const paidStyle = "bg-green-100 text-green-800";
-        // Pending = Grey background/text (Matching image_2023bd.png)
-        const pendingStyle = "bg-gray-200";
 
-        const isPaid = row.status === 'paid' || row.status === 'potvrzeno';
+        const isPaid = row.status === 'paid';
 
         return (
           <span className={`inline-flex items-center px-3 py-1 rounded-md text-sm
-            ${isPaid ? paidStyle : pendingStyle}`}>
+            ${style}`}>
             {label}
           </span>
         );
@@ -198,13 +212,26 @@ export default function DonationsList() {
         </div>
       ),
     },
-
+    {
+      header: "Další informace",
+      cell: (row) => (
+        <div className="" title={row.note}>
+          {row.other_details || "—"}
+        </div>
+      ),
+    },
+    {
+      header: "Neuvádět",
+      cell: (row) => (
+        <GovFormCheckbox className='pointer-events-none' size='s' defaultChecked={row.not_public}></GovFormCheckbox>
+      ),
+    },
     {
       header: "",
       cell: (row) => (
-        <div className="">
-          {row.status === "pending" && <GovButton onClick={async () => { await handleStatusChange(row.id, "paid") }} size='s' type='outlined' color='success'><GovIcon name='check-lg'></GovIcon></GovButton>}
-          <GovButton onClick={async () => { await handleDelete(row.id) }} size='s' type='outlined' color='error'><GovIcon name='delete'></GovIcon></GovButton>
+        <div className="flex gap-2">
+          {row.status === "pending" || row.status === "cancelled" && <GovButton onClick={async () => { await handleStatusChange(row.id, "paid") }} size='s' type='outlined' color='success'><GovIcon name='check-lg'></GovIcon></GovButton>}
+          {row.status != "cancelled" && <GovButton onClick={async () => { await handleStatusChange(row.id, "cancelled") }} size='s' type='outlined' color='error'><GovIcon name='delete'></GovIcon></GovButton>}
         </div>
       ),
     },
@@ -213,22 +240,33 @@ export default function DonationsList() {
   // 4. Render the final table
   return (
     <div className='w-full grid gap-8'>
-      {pending.length > 0 && <Table<Donation>
+      <Table<Donation>
         title={"K vyřešení"}
         description="Základní datová tabulka s možností akce s daným řádkem"
         data={pending}
         columns={columns}
         isLoading={loading}
         totalCount={pending.length}
-      />}
-      {paid.length > 0 && <Table<Donation>
+      />
+      <Table<Donation>
         title={"Přehled darů"}
         description="Základní datová tabulka s možností akce s daným řádkem"
+        header={
+          <GovButton onClick={() => { exportDonationsToExcel(paid) }} type='outlined' color='primary'><GovIcon name='export'></GovIcon>Exportovat</GovButton>
+        }
         data={paid}
         columns={columns}
         isLoading={loading}
         totalCount={paid.length}
-      />}
+      />
+      <Table<Donation>
+        title={"Odmítnuté - nepřišli"}
+        description="Základní datová tabulka s možností akce s daným řádkem"
+        data={cancelled}
+        columns={columns}
+        isLoading={loading}
+        totalCount={cancelled.length}
+      />
     </div>
   );
 }

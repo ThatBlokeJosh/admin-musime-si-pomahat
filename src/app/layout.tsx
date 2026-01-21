@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="cs" data-theme="light">
       <body
-        className={`${roboto.className} antialiased relative flex flex-col`}
+        className={`${roboto.className} max-w-[100vw] overflow-x-hidden antialiased relative flex flex-col`}
       >
         <AuthContextProvider>
           <Header></Header>
