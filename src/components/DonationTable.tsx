@@ -234,7 +234,7 @@ export default function DonationsList() {
       header: "",
       cell: (row) => (
         <div className="flex gap-2">
-          {row.status === "pending" || row.status === "cancelled" && <GovButton onClick={async () => { await handleStatusChange(row.id, "paid") }} size='s' type='outlined' color='success'><GovIcon name='check-lg'></GovIcon></GovButton>}
+          {(row.status === "pending" || row.status === "cancelled") && <GovButton onClick={async () => { await handleStatusChange(row.id, "paid") }} size='s' type='outlined' color='success'><GovIcon name='check-lg'></GovIcon></GovButton>}
           {row.status != "cancelled" && <GovButton onClick={async () => { await handleStatusChange(row.id, "cancelled") }} size='s' type='outlined' color='error'><GovIcon name='delete'></GovIcon></GovButton>}
         </div>
       ),
