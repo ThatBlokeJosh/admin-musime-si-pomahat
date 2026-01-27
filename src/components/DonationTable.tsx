@@ -35,9 +35,9 @@ export default function DonationsList() {
   const [data, setData] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const paid = data.filter(d => d.status === "paid");
-  const pending = data.filter(d => d.status === "pending");
-  const cancelled = data.filter(d => d.status === "cancelled");
+  // --- NEW: Filter States ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [donorType, setDonorType] = useState('all'); // 'all' | 'company' | 'anonymous' | 'person'
 
   // 2. Fetch Data from Firestore
   useEffect(() => {
@@ -69,6 +69,41 @@ export default function DonationsList() {
     };
     fetchData();
   }, []);
+
+  // --- NEW: Filter Logic ---
+  // We filter the raw data first, then split it into status categories
+  const getFilteredData = () => {
+    return data.filter((item) => {
+      // 1. Text Search (Name OR Variable Symbol)
+      const lowerTerm = searchTerm.toLowerCase();
+      // Safety check: ensure properties exist before calling toLowerCase
+      const nameMatch = (item.name || '').toLowerCase().includes(lowerTerm);
+      const vsMatch = (item.variable_symbol || '').includes(lowerTerm);
+
+      const matchesSearch = nameMatch || vsMatch;
+
+      // 2. Type Filter
+      let matchesType = true;
+      if (donorType === 'company') {
+        matchesType = item.for_company === true;
+      } else if (donorType === 'anonymous') {
+        matchesType = item.is_anonymous === true;
+      } else if (donorType === 'person') {
+        // Physical person is neither company nor anonymous
+        matchesType = !item.for_company && !item.is_anonymous;
+      }
+
+      return matchesSearch && matchesType;
+    });
+  };
+
+  // Get the filtered dataset
+  const filteredGlobalData = getFilteredData();
+
+  // Derive the status tables from the FILTERED data
+  const paid = filteredGlobalData.filter(d => d.status === "paid");
+  const pending = filteredGlobalData.filter(d => d.status === "pending");
+  const cancelled = filteredGlobalData.filter(d => d.status === "cancelled");
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -105,25 +140,33 @@ export default function DonationsList() {
   };
 
   function ExportButton(to_export: Donation[]) {
-    return <GovButton onClick={() => { exportDonationsToExcel(to_export) }} type='outlined' color='primary'><GovIcon name='export'></GovIcon>Exportovat</GovButton>
+    // Disable export button if the list is empty (good UX)
+    const isDisabled = to_export.length === 0;
+    return (
+      <GovButton
+        onClick={() => { exportDonationsToExcel(to_export) }}
+        type='outlined'
+        color='primary'
+        disabled={isDisabled}
+      >
+        <GovIcon name='export'></GovIcon>
+        Exportovat
+      </GovButton>
+    )
   }
 
 
-  // 3. Define Column Visuals (The critical part for matching the image)
+  // 3. Define Column Visuals
   const columns: Column<Donation>[] = [
     {
       header: "Dar",
       cell: (row) => {
-        // 1. Get the color from the price object, fallback to a neutral gray
         const baseColor = row.price?.titleColor || "#374151";
-
-        // 2. Helper: Convert Hex to RGBA string with opacity
         const getRgba = (hex: string, alpha: number) => {
           const cleanHex = hex.replace('#', '');
           const r = parseInt(cleanHex.substring(0, 2), 16);
           const g = parseInt(cleanHex.substring(2, 4), 16);
           const b = parseInt(cleanHex.substring(4, 6), 16);
-          // Returns valid CSS color, e.g., "rgba(212, 175, 55, 0.1)"
           return `rgba(${r}, ${g}, ${b}, ${alpha})`;
         };
 
@@ -132,7 +175,6 @@ export default function DonationsList() {
             className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-semibold border"
             style={{
               color: baseColor,
-              // Match your previous design: Background 10% opacity, Border 40% opacity
               backgroundColor: getRgba(baseColor, 0.1),
               borderColor: getRgba(baseColor, 0.4)
             }}
@@ -144,7 +186,6 @@ export default function DonationsList() {
     },
     {
       header: "Variabilní symbol",
-      // Using tabular-nums ensures numbers line up vertically nicely
       cell: (row) => <span className="font-mono tabular-nums">{row.variable_symbol}</span>,
     },
     {
@@ -186,14 +227,8 @@ export default function DonationsList() {
           style = cancelledStyle;
         };
 
-        // 2. Define Styles based on the screenshot
-        // Paid = Green background/text
-
-        const isPaid = row.status === 'paid';
-
         return (
-          <span className={`inline-flex items-center px-3 py-1 rounded-md text-sm
-            ${style}`}>
+          <span className={`inline-flex items-center px-3 py-1 rounded-md text-sm ${style}`}>
             {label}
           </span>
         );
@@ -209,7 +244,6 @@ export default function DonationsList() {
     },
     {
       header: "Vzkaz",
-      // Truncate long messages so they don't break the table layout
       cell: (row) => (
         <div className="max-w-[200px] truncate" title={row.note}>
           {row.note || "—"}
@@ -243,34 +277,70 @@ export default function DonationsList() {
 
   // 4. Render the final table
   return (
-    <div className='w-full grid gap-8'>
-      <Table<Donation>
-        title={"K vyřešení"}
-        description="Základní datová tabulka s možností akce s daným řádkem"
-        data={pending}
-        columns={columns}
-        isLoading={loading}
-        header={ExportButton(pending)}
-        totalCount={pending.length}
-      />
-      <Table<Donation>
-        title={"Přehled darů"}
-        description="Základní datová tabulka s možností akce s daným řádkem"
-        header={ExportButton(paid)}
-        data={paid}
-        columns={columns}
-        isLoading={loading}
-        totalCount={paid.length}
-      />
-      <Table<Donation>
-        title={"Odmítnuté - nepřišli"}
-        description="Základní datová tabulka s možností akce s daným řádkem"
-        data={cancelled}
-        columns={columns}
-        isLoading={loading}
-        header={ExportButton(cancelled)}
-        totalCount={cancelled.length}
-      />
+    <div className='w-full grid gap-4'>
+      <div className="mb-8 bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <div className="flex gap-2 flex-1">
+          {/* Search Input */}
+          <div className="relative w-full max-w-sm">
+            <input
+              type="text"
+              placeholder="Hledat jméno nebo VS..."
+              className="pl-4 pr-4 py-2 gov-form-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          {/* Type Filter */}
+          <select
+            className="px-2 w-fit gov-form-select max-w-[200px]"
+            data-size="m"
+            value={donorType}
+            onChange={(e) => setDonorType(e.target.value)}
+          >
+            <option value="all">Všechny typy</option>
+            <option value="person">Fyzické osoby</option>
+            <option value="company">Firmy</option>
+            <option value="anonymous">Anonymní</option>
+          </select>
+        </div>
+
+        {/* Results Counter */}
+        <div className="text-sm text-gray-500 font-medium whitespace-nowrap">
+          Nalezeno: {filteredGlobalData.length}
+        </div>
+      </div>
+
+      {/* --- Tables Grid --- */}
+      <div className='w-full grid gap-8'>
+        <Table<Donation>
+          title={"K vyřešení"}
+          description="Čekající dary, které je potřeba potvrdit nebo zamítnout."
+          data={pending}
+          columns={columns}
+          isLoading={loading}
+          header={ExportButton(pending)}
+          totalCount={pending.length}
+        />
+        <Table<Donation>
+          title={"Přehled darů"}
+          description="Historie úspěšně potvrzených darů."
+          header={ExportButton(paid)}
+          data={paid}
+          columns={columns}
+          isLoading={loading}
+          totalCount={paid.length}
+        />
+        <Table<Donation>
+          title={"Odmítnuté - nepřišli"}
+          description="Dary, které byly zamítnuty nebo zrušeny."
+          data={cancelled}
+          columns={columns}
+          isLoading={loading}
+          header={ExportButton(cancelled)}
+          totalCount={cancelled.length}
+        />
+      </div>
     </div>
   );
 }
