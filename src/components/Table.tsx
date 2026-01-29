@@ -1,6 +1,6 @@
 // components/ui/Table.tsx
 import { GovPagination } from '@gov-design-system-ce/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Definition for a column structure
 export interface Column<T> {
@@ -34,6 +34,12 @@ export function Table<T extends { id: string }>({
   header,
 }: TableProps<T>) {
   const [page, setPage] = useState(1);
+  const [length, setLength] = useState(data.length);
+
+  useEffect(() => {
+    setPage(1)
+    setLength(data.length)
+  }, [data])
 
   const ITEMS_PER_PAGE = 5;
 
@@ -109,10 +115,11 @@ export function Table<T extends { id: string }>({
           {footer}
         </div>
       ) :
-        (data.length > 0 && <div className="p-2 flex justify-center">
+        <div className="p-2 flex justify-center">
           <GovPagination
+            key={length}
             onPage={setPage}
-            total={data.length}
+            total={length}
             pageSize={ITEMS_PER_PAGE}
             current={page}
             maxPages={10}
@@ -120,7 +127,7 @@ export function Table<T extends { id: string }>({
             type="button"
             color="primary"
           />
-        </div>)
+        </div>
       }
     </div>
   );
