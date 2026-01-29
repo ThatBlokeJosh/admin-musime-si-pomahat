@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, orderBy, limit, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase'; // Ensure this path is correct
 import { Table, Column } from './Table';
-import { GovButton, GovFormCheckbox, GovIcon } from '@gov-design-system-ce/react';
+import { GovButton, GovFormCheckbox, GovIcon, GovPagination } from '@gov-design-system-ce/react';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { exportDonationsToExcel } from '@/lib/xlsx';
 
@@ -38,6 +38,12 @@ export default function DonationsList() {
   // --- NEW: Filter States ---
   const [searchTerm, setSearchTerm] = useState('');
   const [donorType, setDonorType] = useState('all'); // 'all' | 'company' | 'anonymous' | 'person'
+  const ITEMS_PER_PAGE = 5;
+  const [cancelledPage, setCancelledPage] = useState(1);
+  const [paidPage, setPaidPage] = useState(1);
+  const [pendingPage, setPendingPage] = useState(1);
+
+
 
   // 2. Fetch Data from Firestore
   useEffect(() => {
@@ -104,6 +110,8 @@ export default function DonationsList() {
   const paid = filteredGlobalData.filter(d => d.status === "paid");
   const pending = filteredGlobalData.filter(d => d.status === "pending");
   const cancelled = filteredGlobalData.filter(d => d.status === "cancelled");
+
+
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {

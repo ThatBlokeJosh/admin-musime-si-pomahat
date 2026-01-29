@@ -1,5 +1,6 @@
 // components/ui/Table.tsx
-import React from 'react';
+import { GovPagination } from '@gov-design-system-ce/react';
+import React, { useState } from 'react';
 
 // Definition for a column structure
 export interface Column<T> {
@@ -32,6 +33,14 @@ export function Table<T extends { id: string }>({
   footer, // <--- Destructure footer
   header,
 }: TableProps<T>) {
+  const [page, setPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 5;
+
+  const startIndex = (page - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentData = data.slice(startIndex, endIndex);
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto flex flex-col">
       {/* --- Header Section --- */}
@@ -80,7 +89,7 @@ export function Table<T extends { id: string }>({
                 </td>
               </tr>
             ) : (
-              data.map((row) => (
+              currentData.map((row) => (
                 <tr key={row.id} className="hover:bg-gray-50/80 transition duration-150 ease-in-out">
                   {columns.map((col, index) => (
                     <td key={index} className={`px-6 py-5 whitespace-nowrap ${col.className || ''}`}>
@@ -95,11 +104,24 @@ export function Table<T extends { id: string }>({
       </div>
 
       {/* --- Footer Section --- */}
-      {footer && (
+      {footer ? (
         <div className="px-2 py-4 border-t border-gray-200 bg-gray-50/30">
           {footer}
         </div>
-      )}
+      ) :
+        (data.length > 0 && <div className="p-2 flex justify-center">
+          <GovPagination
+            onPage={setPage}
+            total={data.length}
+            pageSize={ITEMS_PER_PAGE}
+            current={page}
+            maxPages={10}
+            size="m"
+            type="button"
+            color="primary"
+          />
+        </div>)
+      }
     </div>
   );
 }
